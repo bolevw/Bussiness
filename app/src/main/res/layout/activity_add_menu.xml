@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_vertical_margin"
+        tools:context="com.iocm.business.ui.activity.AddMenuActivity">
+
+        <include layout="@layout/global_include_toolbar" />
+
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/menuNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:hint="请输入菜名"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/menuDetailEditTextView"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="请输入配料"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/menuFunctionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="请输入菜的营养价值"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="添加成品照片" />
+
+        <ImageButton
+            android:id="@+id/menuAddPicButton"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@android:drawable/ic_menu_add" />
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/menuSubmitButton"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="提交" />
+    </LinearLayout>
+</ScrollView>
