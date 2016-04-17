@@ -34,6 +34,7 @@ public class MyOrderFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_order, container, false);
+        setHasOptionsMenu(true);
         return v;
     }
 

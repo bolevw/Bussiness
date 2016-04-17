@@ -14,13 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.iocm.business.R;
+import com.iocm.business.base.BaseActivity;
 import com.iocm.business.ui.fragment.EditMenuFragment;
 import com.iocm.business.ui.fragment.MyMenuFragment;
 import com.iocm.business.ui.fragment.MyOrderFragment;
 import com.iocm.business.utils.FragmentUtils;
 import com.iocm.business.utils.ToastUtils;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
@@ -39,8 +40,28 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FragmentUtils.replaceFragment(getSupportFragmentManager(), R.id.fragmentContainer, new MyOrderFragment(), false, "MyOrderFragment");
+        FragmentUtils.replaceFragment(getSupportFragmentManager(), R.id.fragmentContainer, new MyMenuFragment(), false, "MyOrderFragment");
         navigationView.setCheckedItem(R.id.nav_camera);
+
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected void setListener() {
+
+    }
+
+    @Override
+    protected void bind() {
+
+    }
+
+    @Override
+    protected void unBind() {
 
     }
 
@@ -52,28 +73,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

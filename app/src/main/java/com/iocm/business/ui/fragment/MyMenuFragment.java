@@ -33,10 +33,17 @@ public class MyMenuFragment extends BaseFragment {
     private List<MenuModel> viewData = new ArrayList<>();
 
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_menu, container, false);
+        setHasOptionsMenu(true);
         return v;
 
     }

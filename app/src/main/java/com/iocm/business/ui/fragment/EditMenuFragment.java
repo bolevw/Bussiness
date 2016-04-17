@@ -24,6 +24,7 @@ public class EditMenuFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_menu, container, false);
+        setHasOptionsMenu(true);
         return v;
     }
 
@@ -54,10 +55,10 @@ public class EditMenuFragment extends BaseFragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add_menu) {
-            //add menu
             startActivity(new Intent(getActivity(), AddMenuActivity.class));
             return true;
         }

@@ -24,9 +24,10 @@
         </activity>
         <activity
             android:name=".ui.activity.MainActivity"
-            android:label="@string/title_add_menu"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".ui.activity.AddMenuActivity"></activity>
+        <activity
+            android:name=".ui.activity.AddMenuActivity"
+            android:label="@string/title_add_menu" />
     </application>
 
 </manifest>
