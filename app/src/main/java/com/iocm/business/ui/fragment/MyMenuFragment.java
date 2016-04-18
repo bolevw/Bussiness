@@ -12,11 +12,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 import com.iocm.business.R;
 import com.iocm.business.base.BaseFragment;
 import com.iocm.business.model.MenuModel;
 import com.iocm.business.utils.PicassoUtils;
-import com.squareup.picasso.Picasso;
+import com.iocm.business.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,12 +58,44 @@ public class MyMenuFragment extends BaseFragment {
 
         recyclerView = (RecyclerView) v.findViewById(R.id.myMenuRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        refreshLayout.setColorSchemeColors(R.color.colorAccent, R.color.colorPrimary, R.color.colorPrimaryDark);
 
     }
 
     @Override
     protected void bind() {
+        getData();
 
+    }
+
+    private void getData() {
+        refreshLayout.setRefreshing(true);
+        AVQuery<AVObject> query = new AVQuery<>("MenuTable");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                refreshLayout.setRefreshing(false);
+                if (null == e) {
+                    if (list.size() != 0) {
+                        viewData.clear();
+
+                        for (AVObject object : list) {
+                            MenuModel model = new MenuModel();
+                            model.setId(object.getObjectId());
+                            model.setName(object.getString("name"));
+                            model.setDetail(object.getString("detail"));
+                            String url = object.getAVFile("picSrc").getUrl();
+                            model.setImageSrc(url);
+                            viewData.add(model);
+                        }
+
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                    }
+                } else {
+                    ToastUtils.showNormalToast("请检查您的网络!");
+                }
+            }
+        });
     }
 
     @Override
@@ -79,7 +115,7 @@ public class MyMenuFragment extends BaseFragment {
     SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-
+            getData();
         }
     };
 

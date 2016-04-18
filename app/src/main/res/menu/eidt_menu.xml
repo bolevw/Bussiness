@@ -4,6 +4,5 @@
     <item
         android:id="@+id/action_add_menu"
         android:title="@string/action_add_menu"
-        android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="always" />
 </menu>

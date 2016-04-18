@@ -44,6 +44,7 @@ public class MyOrderFragment extends BaseFragment {
         recyclerView = (RecyclerView) v.findViewById(R.id.myOrderRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        swipeRefreshLayout.setColorSchemeColors(R.color.colorAccent, R.color.colorPrimary, R.color.colorPrimaryDark);
 
     }
 

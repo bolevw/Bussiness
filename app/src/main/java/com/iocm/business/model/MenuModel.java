@@ -1,14 +1,17 @@
 package com.iocm.business.model;
 
+import java.io.Serializable;
+
 /**
  * Created by liubo on 4/17/16.
  */
-public class MenuModel {
+public class MenuModel implements Serializable {
 
     private String id;
     private String imageSrc;
     private String name;
     private String detail;
+    private String function;
 
 
     @Override
@@ -18,7 +21,16 @@ public class MenuModel {
                 ", imageSrc='" + imageSrc + '\'' +
                 ", name='" + name + '\'' +
                 ", detail='" + detail + '\'' +
+                ", function='" + function + '\'' +
                 '}';
+    }
+
+    public String getFunction() {
+        return function;
+    }
+
+    public void setFunction(String function) {
+        this.function = function;
     }
 
     public String getId() {

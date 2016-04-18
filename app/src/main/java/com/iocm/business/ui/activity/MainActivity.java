@@ -1,35 +1,37 @@
 package com.iocm.business.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.iocm.business.R;
 import com.iocm.business.base.BaseActivity;
+import com.iocm.business.model.NameValue;
 import com.iocm.business.ui.fragment.EditMenuFragment;
 import com.iocm.business.ui.fragment.MyMenuFragment;
 import com.iocm.business.ui.fragment.MyOrderFragment;
 import com.iocm.business.utils.FragmentUtils;
-import com.iocm.business.utils.ToastUtils;
+import com.iocm.business.utils.SharedPreferencesUtil;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    Toolbar toolbar;
+    private SharedPreferencesUtil preferencesUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        preferencesUtil = SharedPreferencesUtil.getInstance(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -89,7 +91,9 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_slideshow) {
             FragmentUtils.replaceFragment(getSupportFragmentManager(), R.id.fragmentContainer, new MyOrderFragment(), false, "MyOrderFragment");
         } else if (id == R.id.nav_manage) {
-            ToastUtils.showNormalToast("log out");
+            preferencesUtil.saveValue(new NameValue("login", false));
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
