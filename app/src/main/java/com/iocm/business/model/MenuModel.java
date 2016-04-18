@@ -12,7 +12,15 @@ public class MenuModel implements Serializable {
     private String name;
     private String detail;
     private String function;
+    private String money;
 
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
 
     @Override
     public String toString() {

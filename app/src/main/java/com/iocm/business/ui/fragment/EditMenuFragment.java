@@ -94,6 +94,7 @@ public class EditMenuFragment extends BaseFragment {
                             model.setName(object.getString("name"));
                             model.setDetail(object.getString("detail"));
                             model.setFunction(object.getString("function"));
+                            model.setMoney(object.getString("money"));
                             String url = object.getAVFile("picSrc").getUrl();
                             model.setImageSrc(url);
                             viewData.add(model);
@@ -137,6 +138,7 @@ public class EditMenuFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), AddMenuActivity.class);
+                    intent.putExtra("edit", true);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("menu", (Serializable) model);
                     intent.putExtras(bundle);
@@ -146,7 +148,7 @@ public class EditMenuFragment extends BaseFragment {
 
             vh.nameTextView.setText(model.getName());
             vh.detailTextView.setText(model.getDetail());
-
+            vh.moneyTextView.setText("价格:" + model.getMoney() + "元");
             PicassoUtils.normalShowImage(getActivity(), model.getImageSrc(), vh.menuImageView);
 
         }
@@ -163,12 +165,14 @@ public class EditMenuFragment extends BaseFragment {
             private ImageView menuImageView;
             private TextView nameTextView;
             private TextView detailTextView;
+            private TextView moneyTextView;
 
             public VH(View itemView) {
                 super(itemView);
 
                 itemContent = (LinearLayout) itemView.findViewById(R.id.itemMyMenuContent);
 
+                moneyTextView = (TextView) itemView.findViewById(R.id.itemMenuMoney);
                 menuImageView = (ImageView) itemView.findViewById(R.id.itemMenuImageView);
                 nameTextView = (TextView) itemView.findViewById(R.id.itemMenuName);
                 detailTextView = (TextView) itemView.findViewById(R.id.itemMenuDetail);

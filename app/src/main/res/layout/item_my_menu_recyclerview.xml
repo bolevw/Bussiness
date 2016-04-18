@@ -27,6 +27,15 @@
         tools:text="test" />
 
     <TextView
+        android:id="@+id/itemMenuMoney"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_normal"
+        tools:text="test" />
+
+    <TextView
         android:id="@+id/itemMenuDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

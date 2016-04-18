@@ -85,6 +85,7 @@ public class MyMenuFragment extends BaseFragment {
                             model.setName(object.getString("name"));
                             model.setDetail(object.getString("detail"));
                             String url = object.getAVFile("picSrc").getUrl();
+                            model.setMoney(object.getString("money"));
                             model.setImageSrc(url);
                             viewData.add(model);
                         }
@@ -140,7 +141,7 @@ public class MyMenuFragment extends BaseFragment {
 
             vh.nameTextView.setText(model.getName());
             vh.detailTextView.setText(model.getDetail());
-
+            vh.moneyTextView.setText("价格:" + model.getMoney() + "元");
             PicassoUtils.normalShowImage(getActivity(), model.getImageSrc(), vh.menuImageView);
 
         }
@@ -157,12 +158,14 @@ public class MyMenuFragment extends BaseFragment {
             private ImageView menuImageView;
             private TextView nameTextView;
             private TextView detailTextView;
+            private TextView moneyTextView;
 
             public VH(View itemView) {
                 super(itemView);
 
                 itemContent = (LinearLayout) itemView.findViewById(R.id.itemMyMenuContent);
 
+                moneyTextView = (TextView) itemView.findViewById(R.id.itemMenuMoney);
                 menuImageView = (ImageView) itemView.findViewById(R.id.itemMenuImageView);
                 nameTextView = (TextView) itemView.findViewById(R.id.itemMenuName);
                 detailTextView = (TextView) itemView.findViewById(R.id.itemMenuDetail);

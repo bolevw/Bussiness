@@ -26,6 +26,20 @@
             android:textSize="@dimen/text_normal" />
 
         <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/menuMoneyEditText"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="请输入菜的价格(单位:元)"
+            android:inputType="number"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_normal" />
+
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/menuDetailEditTextView"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -51,6 +65,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_normal" />
 
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,6 +90,17 @@
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin" />
 
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/delButton"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="删除"
+            android:textColor="@android:color/holo_red_light"
+            android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/menuSubmitButton"

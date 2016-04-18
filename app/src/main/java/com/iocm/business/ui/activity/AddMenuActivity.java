@@ -15,6 +15,9 @@ import android.widget.ImageButton;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.DeleteCallback;
+import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.iocm.business.R;
 import com.iocm.business.base.BaseActivity;
@@ -38,12 +41,18 @@ public class AddMenuActivity extends BaseActivity {
     private AppCompatEditText nameEditText;
     private AppCompatEditText detailEditText;
     private AppCompatEditText funcEditText;
+    private AppCompatEditText moneyEditText;
 
     private ImageButton addPicButton;
 
     private AppCompatImageView menuPicImageView;
 
     private AppCompatButton submitButton;
+    private AppCompatButton delButton;
+    private boolean edit = false;
+    private MenuModel model;
+
+    private AVObject post = new AVObject("MenuTable");
 
 
     @Override
@@ -60,10 +69,15 @@ public class AddMenuActivity extends BaseActivity {
         menuPicImageView = (AppCompatImageView) findViewById(R.id.menuPicImageView);
 
         submitButton = (AppCompatButton) findViewById(R.id.menuSubmitButton);
+
+        moneyEditText = (AppCompatEditText) findViewById(R.id.menuMoneyEditText);
+        delButton = (AppCompatButton) findViewById(R.id.delButton);
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (null != intent && null != bundle) {
-            MenuModel model = (MenuModel) bundle.getSerializable("menu");
+            edit = intent.getBooleanExtra("edit", false);
+            model = (MenuModel) bundle.getSerializable("menu");
             updateView(model);
         }
 
@@ -73,13 +87,34 @@ public class AddMenuActivity extends BaseActivity {
         nameEditText.setText(m.getName());
         detailEditText.setText(m.getDetail());
         funcEditText.setText(m.getFunction());
+        moneyEditText.setText(m.getMoney());
         PicassoUtils.normalShowImage(this, m.getImageSrc(), menuPicImageView);
+
+        delButton.setVisibility(View.VISIBLE);
+
+        AVQuery<AVObject> query = new AVQuery<>("MenuTable");
+
+        picFile = post.getAVFile("picSrc");
+
+        query.getInBackground(model.getId(), new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                if (e == null) {
+                    post = avObject;
+                } else {
+                    ToastUtils.showNormalToast("参数错误");
+                    finish();
+                }
+            }
+        });
+
     }
 
     @Override
     protected void setListener() {
         addPicButton.setOnClickListener(listener);
         submitButton.setOnClickListener(listener);
+        delButton.setOnClickListener(listener);
 
     }
 
@@ -93,20 +128,81 @@ public class AddMenuActivity extends BaseActivity {
             }
 
             if (id == submitButton.getId()) {
-                uploadMenu();
+                if (edit) {
+                    updateMenu();
+                } else {
+                    uploadMenu();
+                }
+            }
 
+            if (id == delButton.getId()) {
+                delMenu();
             }
 
         }
     };
 
+    private void delMenu() {
+        post.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    ToastUtils.showNormalToast("删除成功！");
+                    finish();
+                } else {
+                    Log.e("error", e.getCode() + " " + e.toString());
+                }
+            }
+        });
+    }
+
+    private void updateMenu() {
+
+
+        String name = nameEditText.getText().toString();
+        String detail = detailEditText.getText().toString();
+        String function = funcEditText.getText().toString();
+        String money = moneyEditText.getText().toString();
+
+        if (TextUtils.isEmpty(name)) {
+            ToastUtils.showNormalToast("请输入菜名");
+        } else if (TextUtils.isEmpty(moneyEditText.getText().toString())) {
+            ToastUtils.showNormalToast("请输入菜价");
+        } else if (TextUtils.isEmpty(detail)) {
+            ToastUtils.showNormalToast("请输入配料");
+        } else if (TextUtils.isEmpty(function)) {
+            ToastUtils.showNormalToast("请输入菜的营养价值");
+        } else {
+            post.put("name", name);
+            post.put("detail", detail);
+            post.put("function", function);
+            post.put("picSrc", picFile);
+            post.put("money", money);
+            post.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e == null) {
+                        ToastUtils.showNormalToast("上传菜品成功");
+                        finish();
+                    } else {
+                        ToastUtils.showNormalToast("上传失败，请检查您的网络!");
+                    }
+                }
+            });
+        }
+
+
+    }
+
     private void uploadMenu() {
         String name = nameEditText.getText().toString();
         String detail = detailEditText.getText().toString();
         String function = funcEditText.getText().toString();
-        String pic = picPath;
+
         if (TextUtils.isEmpty(name)) {
             ToastUtils.showNormalToast("请输入菜名");
+        } else if (TextUtils.isEmpty(moneyEditText.getText().toString())) {
+            ToastUtils.showNormalToast("请输入菜价");
         } else if (TextUtils.isEmpty(detail)) {
             ToastUtils.showNormalToast("请输入配料");
         } else if (TextUtils.isEmpty(function)) {
@@ -114,16 +210,17 @@ public class AddMenuActivity extends BaseActivity {
         } else if (!uploadPic) {
             ToastUtils.showNormalToast("请选择成品照片");
         } else {
-            upload(name, detail, function, pic);
+            upload(name, detail, function, moneyEditText.getText().toString());
         }
     }
 
-    private void upload(String name, String detail, String function, String pic) {
+    private void upload(String name, String detail, String function, String money) {
         AVObject avObject = new AVObject("MenuTable");
         avObject.put("name", name);
         avObject.put("detail", detail);
         avObject.put("function", function);
         avObject.put("picSrc", picFile);
+        avObject.put("money", money);
         avObject.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
@@ -213,9 +310,11 @@ public class AddMenuActivity extends BaseActivity {
                 @Override
                 public void done(AVException e) {
                     if (null == e) {
+                        ToastUtils.showNormalToast("上传照片成功!");
                         uploadPic = true;
                     } else {
                         Log.e("error", e.toString());
+                        ToastUtils.showNormalToast("上传照片失败,请重新选择照片!");
                         uploadPic = false;
                     }
                 }
