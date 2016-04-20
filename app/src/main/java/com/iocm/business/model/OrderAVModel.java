@@ -1,15 +1,12 @@
 package com.iocm.business.model;
 
-import com.avos.avoscloud.AVClassName;
-import com.avos.avoscloud.AVObject;
-
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/4/19.
  */
-@AVClassName("OrderAvModel")
-public class OrderAVModel extends AVObject {
+
+public class OrderAVModel{
     private String id;
     private String userId;
     private String tableNum;

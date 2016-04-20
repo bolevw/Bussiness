@@ -1,13 +1,10 @@
 package com.iocm.business.model;
 
-import com.avos.avoscloud.AVClassName;
-import com.avos.avoscloud.AVObject;
-
 /**
  * Created by Administrator on 2016/4/19.
  */
-@AVClassName("OrderItemAvModel")
-public class OrderItemAVModel extends AVObject {
+
+public class OrderItemAVModel  {
 
 
     private Integer num;

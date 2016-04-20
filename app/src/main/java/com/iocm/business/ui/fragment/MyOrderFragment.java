@@ -19,6 +19,8 @@ import com.avos.avoscloud.SaveCallback;
 import com.google.gson.reflect.TypeToken;
 import com.iocm.business.R;
 import com.iocm.business.base.BaseFragment;
+import com.iocm.business.model.ItemData;
+import com.iocm.business.model.MenuAVModel;
 import com.iocm.business.model.OrderAVModel;
 import com.iocm.business.model.OrderItemAVModel;
 import com.iocm.business.utils.GsonUtils;
@@ -118,7 +120,7 @@ public class MyOrderFragment extends BaseFragment {
             final OrderVH vh = (OrderVH) holder;
             final OrderAVModel model = viewData.get(position);
             vh.tableNumTextView.setText(model.getTableNum() + "号桌");
-            vh.setItemViewData(model.getMenuList());
+            vh.setItemViewData(new ItemData<Integer, List<OrderItemAVModel>>(position, model.getMenuList()));
             if (model.getOrderStatus() == 2) {
                 vh.confirmButton.setText("已经通知顾客开始做菜了");
                 vh.confirmButton.setEnabled(false);
@@ -127,6 +129,7 @@ public class MyOrderFragment extends BaseFragment {
                 vh.confirmButton.setEnabled(false);
             } else {
                 vh.confirmButton.setText("开始做菜");
+                vh.confirmButton.setEnabled(true);
             }
             vh.confirmButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -164,13 +167,14 @@ public class MyOrderFragment extends BaseFragment {
             private TextView tableNumTextView;
             private Button confirmButton;
 
-            private List<OrderItemAVModel> itemViewData = new ArrayList<>();
+            private ItemData<Integer, List<OrderItemAVModel>> itemViewData = new ItemData<>();
 
-            public List<OrderItemAVModel> getItemViewData() {
+            public ItemData<Integer, List<OrderItemAVModel>> getItemViewData() {
+
                 return itemViewData;
             }
 
-            public void setItemViewData(List<OrderItemAVModel> itemViewData) {
+            public void setItemViewData(ItemData<Integer, List<OrderItemAVModel>> itemViewData) {
                 this.itemViewData = itemViewData;
                 itemOrderRecyclerView.getAdapter().notifyDataSetChanged();
             }
@@ -196,22 +200,63 @@ public class MyOrderFragment extends BaseFragment {
                 }
 
                 @Override
-                public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-                    ItemVH vh = (ItemVH) holder;
-                    OrderItemAVModel model = itemViewData.get(position);
+                public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+                    final ItemVH vh = (ItemVH) holder;
+                    OrderItemAVModel model = itemViewData.getValue().get(position);
 
                     vh.name.setText(model.getModel().getName());
+                    int status = model.getModel().getMenuStatus();
+                    vh.confirmButton.setTag(itemViewData.getKey());
                     vh.confirmButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ToastUtils.showNormalToast("change status!");
+
+                            final List<OrderItemAVModel> list1 = itemViewData.getValue();
+                            OrderItemAVModel orderItemAVModel = list1.get(position);
+                            MenuAVModel menuAVModel = orderItemAVModel.getModel();
+                            menuAVModel.setMenuStatus(3);
+                            list1.remove(position);
+                            orderItemAVModel.setModel(menuAVModel);
+                            list1.add(orderItemAVModel);
+//                            setItemViewData(new ItemData<Integer, List<OrderItemAVModel>>(itemViewData.getKey(), list));
+
+
+                            int p = (int) vh.confirmButton.getTag();
+                            String obId = viewData.get(p).getId();
+                            AVQuery<AVObject> query = new AVQuery<AVObject>("OrderTable");
+                            query.whereEqualTo("objectId", obId);
+                            query.findInBackground(new FindCallback<AVObject>() {
+                                @Override
+                                public void done(List<AVObject> list, AVException e) {
+                                    if (e == null && list.size() > 0) {
+                                        AVObject getOb = list.get(0);
+                                        getOb.put("menuList", GsonUtils.getInstance().getGson().toJson(list1));
+                                        getOb.saveInBackground(new SaveCallback() {
+                                            @Override
+                                            public void done(AVException e) {
+                                                if (e == null) {
+                                                    vh.confirmButton.setVisibility(View.GONE);
+                                                    ToastUtils.showNormalToast("修改成功");
+                                                    getData();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            });
                         }
                     });
+
+                    if (status == 3) {
+                        vh.confirmButton.setVisibility(View.GONE);
+                    } else {
+                        vh.confirmButton.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 @Override
                 public int getItemCount() {
-                    return itemViewData.size();
+                    return itemViewData.getValue().size();
                 }
 
                 private class ItemVH extends RecyclerView.ViewHolder {

@@ -1,13 +1,9 @@
 package com.iocm.business.model;
 
-import com.avos.avoscloud.AVClassName;
-import com.avos.avoscloud.AVObject;
-
 /**
  * Created by liubo on 4/17/16.
  */
-@AVClassName("MenuAvModel")
-public class MenuAVModel extends AVObject {
+public class MenuAVModel {
 
 
     private String id;
