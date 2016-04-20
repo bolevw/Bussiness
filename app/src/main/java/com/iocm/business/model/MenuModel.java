@@ -13,6 +13,42 @@ public class MenuModel implements Serializable {
     private String detail;
     private String function;
     private String money;
+    private String type;
+    private String taste;
+    private String method;
+    private boolean has;
+
+    public boolean isHas() {
+        return has;
+    }
+
+    public void setHas(boolean has) {
+        this.has = has;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTaste() {
+        return taste;
+    }
+
+    public void setTaste(String taste) {
+        this.taste = taste;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
 
     public String getMoney() {
         return money;

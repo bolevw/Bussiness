@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,6 +12,19 @@
         tools:context="com.iocm.business.ui.activity.AddMenuActivity">
 
         <include layout="@layout/global_include_toolbar" />
+
+
+        <CheckBox
+            android:id="@+id/hasGood"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:checked="false"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="有货"
+            android:textSize="@dimen/text_normal" />
 
 
         <android.support.v7.widget.AppCompatEditText
@@ -34,6 +48,45 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:hint="请输入菜的价格(单位:元)"
             android:inputType="number"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_normal" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/typeEditTextView"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="请输入菜系"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_normal" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/tasteEditTextView"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="请输入口味"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_normal" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/methodEditTextView"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="请输入烹饪方法"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:textColor="@color/black"
@@ -67,6 +120,7 @@
 
 
         <TextView
+            android:id="@+id/addPicTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_vertical_margin"

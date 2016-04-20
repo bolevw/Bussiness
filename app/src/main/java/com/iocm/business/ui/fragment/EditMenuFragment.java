@@ -95,6 +95,10 @@ public class EditMenuFragment extends BaseFragment {
                             model.setDetail(object.getString("detail"));
                             model.setFunction(object.getString("function"));
                             model.setMoney(object.getString("money"));
+                            model.setType(object.getString("type"));
+                            model.setTaste(object.getString("taste"));
+                            model.setMethod(object.getString("method"));
+                            model.setHas(object.getBoolean("has"));
                             String url = object.getAVFile("picSrc").getUrl();
                             model.setImageSrc(url);
                             viewData.add(model);

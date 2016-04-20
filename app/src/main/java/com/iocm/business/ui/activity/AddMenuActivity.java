@@ -2,6 +2,7 @@ package com.iocm.business.ui.activity;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.widget.AppCompatButton;
@@ -10,7 +11,10 @@ import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -41,7 +45,11 @@ public class AddMenuActivity extends BaseActivity {
     private AppCompatEditText nameEditText;
     private AppCompatEditText detailEditText;
     private AppCompatEditText funcEditText;
-    private AppCompatEditText moneyEditText;
+    private AppCompatEditText moneyEditText, typeEditTextView, tasteEditTextView, methodEditTextView;
+
+    private CheckBox hasGood;
+
+    private TextView addPicTextView;
 
     private ImageButton addPicButton;
 
@@ -54,12 +62,14 @@ public class AddMenuActivity extends BaseActivity {
 
     private AVObject post = new AVObject("MenuTable");
 
+    private boolean has = true;
 
     @Override
     protected void initView() {
         setContentView(R.layout.activity_add_menu);
 
 
+        hasGood = (CheckBox) findViewById(R.id.hasGood);
         nameEditText = (AppCompatEditText) findViewById(R.id.menuNameEditText);
         detailEditText = (AppCompatEditText) findViewById(R.id.menuDetailEditTextView);
         funcEditText = (AppCompatEditText) findViewById(R.id.menuFunctionEditText);
@@ -69,6 +79,10 @@ public class AddMenuActivity extends BaseActivity {
         menuPicImageView = (AppCompatImageView) findViewById(R.id.menuPicImageView);
 
         submitButton = (AppCompatButton) findViewById(R.id.menuSubmitButton);
+        typeEditTextView = (AppCompatEditText) findViewById(R.id.typeEditTextView);
+        tasteEditTextView = (AppCompatEditText) findViewById(R.id.tasteEditTextView);
+        methodEditTextView = (AppCompatEditText) findViewById(R.id.methodEditTextView);
+        addPicTextView = (TextView) findViewById(R.id.addPicTextView);
 
         moneyEditText = (AppCompatEditText) findViewById(R.id.menuMoneyEditText);
         delButton = (AppCompatButton) findViewById(R.id.delButton);
@@ -83,24 +97,34 @@ public class AddMenuActivity extends BaseActivity {
 
     }
 
+    boolean getS = false;
+
     private void updateView(MenuModel m) {
         nameEditText.setText(m.getName());
         detailEditText.setText(m.getDetail());
         funcEditText.setText(m.getFunction());
         moneyEditText.setText(m.getMoney());
+        typeEditTextView.setText(m.getType());
+        tasteEditTextView.setText(m.getTaste());
+        methodEditTextView.setText(m.getMethod());
+
+        hasGood.setChecked(m.isHas());
+
         PicassoUtils.normalShowImage(this, m.getImageSrc(), menuPicImageView);
 
         delButton.setVisibility(View.VISIBLE);
 
+
         AVQuery<AVObject> query = new AVQuery<>("MenuTable");
 
-        picFile = post.getAVFile("picSrc");
 
         query.getInBackground(model.getId(), new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 if (e == null) {
+                    getS = true;
                     post = avObject;
+                    picFile = post.getAVFile("picSrc");
                 } else {
                     ToastUtils.showNormalToast("参数错误");
                     finish();
@@ -115,6 +139,12 @@ public class AddMenuActivity extends BaseActivity {
         addPicButton.setOnClickListener(listener);
         submitButton.setOnClickListener(listener);
         delButton.setOnClickListener(listener);
+        hasGood.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                has = isChecked;
+            }
+        });
 
     }
 
@@ -198,6 +228,9 @@ public class AddMenuActivity extends BaseActivity {
         String name = nameEditText.getText().toString();
         String detail = detailEditText.getText().toString();
         String function = funcEditText.getText().toString();
+        String type = typeEditTextView.getText().toString();
+        String taste = tasteEditTextView.getText().toString();
+        String method = methodEditTextView.getText().toString();
 
         if (TextUtils.isEmpty(name)) {
             ToastUtils.showNormalToast("请输入菜名");
@@ -208,19 +241,25 @@ public class AddMenuActivity extends BaseActivity {
         } else if (TextUtils.isEmpty(function)) {
             ToastUtils.showNormalToast("请输入菜的营养价值");
         } else if (!uploadPic) {
-            ToastUtils.showNormalToast("请选择成品照片");
+            ToastUtils.showNormalToast("照片上传中。。请稍等。");
         } else {
-            upload(name, detail, function, moneyEditText.getText().toString());
+            upload(name, detail, function, moneyEditText.getText().toString(), type, taste, method);
         }
     }
 
-    private void upload(String name, String detail, String function, String money) {
+    private void upload(String name, String detail, String function, String money, String type, String taste, String method) {
         AVObject avObject = new AVObject("MenuTable");
         avObject.put("name", name);
         avObject.put("detail", detail);
         avObject.put("function", function);
-        avObject.put("picSrc", picFile);
+        if (getS) {
+            avObject.put("picSrc", picFile);
+        }
         avObject.put("money", money);
+        avObject.put("type", type);
+        avObject.put("taste", taste);
+        avObject.put("method", method);
+        avObject.put("has", has);
         avObject.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
@@ -304,17 +343,21 @@ public class AddMenuActivity extends BaseActivity {
     private boolean uploadPic = false;
 
     private void uploadAvatar(String path) {
+        addPicTextView.setText("正在上传照片。。请稍等。");
+        addPicTextView.setTextColor(Color.parseColor("#ff0000"));
         try {
             picFile = AVFile.withAbsoluteLocalPath("pic.jpg", path);
             picFile.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(AVException e) {
                     if (null == e) {
-                        ToastUtils.showNormalToast("上传照片成功!");
+                        getS = true;
+                        addPicTextView.setText("上传照片成功!");
                         uploadPic = true;
+
                     } else {
                         Log.e("error", e.toString());
-                        ToastUtils.showNormalToast("上传照片失败,请重新选择照片!");
+                        addPicTextView.setText("上传照片失败,请重新选择照片!");
                         uploadPic = false;
                     }
                 }
