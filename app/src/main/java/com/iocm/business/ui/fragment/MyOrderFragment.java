@@ -65,6 +65,7 @@ public class MyOrderFragment extends BaseFragment {
 
         AVQuery<AVObject> query = new AVQuery<>("OrderTable");
         query.whereNotEqualTo("orderStatus", 3);
+        query.orderByDescending("createdAt");
 
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
@@ -77,6 +78,7 @@ public class MyOrderFragment extends BaseFragment {
                     model.setTableNum(object.getString("tableNum"));
                     model.setUserId(object.getString("userId"));
                     model.setUsername(object.getString("username"));
+                    model.setOrderStatus(object.getNumber("orderStatus").intValue());
                     Type listType = new TypeToken<List<OrderItemAVModel>>() {
                     }.getType();
                     List<OrderItemAVModel> listData = GsonUtils.getInstance().getGson().fromJson(object.getString("menuList"), listType);
@@ -117,6 +119,15 @@ public class MyOrderFragment extends BaseFragment {
             final OrderAVModel model = viewData.get(position);
             vh.tableNumTextView.setText(model.getTableNum() + "号桌");
             vh.setItemViewData(model.getMenuList());
+            if (model.getOrderStatus() == 2) {
+                vh.confirmButton.setText("已经通知顾客开始做菜了");
+                vh.confirmButton.setEnabled(false);
+            } else if (model.getOrderStatus() == 3) {
+                vh.confirmButton.setText("顾客以收到所有菜");
+                vh.confirmButton.setEnabled(false);
+            } else {
+                vh.confirmButton.setText("开始做菜");
+            }
             vh.confirmButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
