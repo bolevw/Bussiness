@@ -79,7 +79,7 @@ public class MyOrderFragment extends BaseFragment {
     private void getData() {
 
         AVQuery<AVObject> query = new AVQuery<>("OrderTable");
-        query.whereNotEqualTo("orderStatus", ORDER_CLIENT_GET_ALL);
+        query.whereLessThan("orderStatus", ORDER_CLIENT_GET_ALL);
         query.orderByDescending("createdAt");
 
         query.findInBackground(new FindCallback<AVObject>() {
@@ -241,15 +241,15 @@ public class MyOrderFragment extends BaseFragment {
                     vh.confirmButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            getData();
                             final List<OrderItemAVModel> list1 = itemViewData.getValue();
                             OrderItemAVModel orderItemAVModel = list1.get(position);
                             MenuAVModel menuAVModel = orderItemAVModel.getModel();
                             menuAVModel.setMenuStatus(COOK_FINISH_THIS_MENU); //做好了
-                            list1.remove(position);
                             orderItemAVModel.setModel(menuAVModel);
                             list1.add(orderItemAVModel);
-//                            setItemViewData(new ItemData<Integer, List<OrderItemAVModel>>(itemViewData.getKey(), list));
+                            list1.remove(position);
+                            setItemViewData(new ItemData<Integer, List<OrderItemAVModel>>(itemViewData.getKey(), list1));
 
                             boolean getALL = true;
                             for (OrderItemAVModel avModel : list1) {
