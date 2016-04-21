@@ -28,6 +28,7 @@ import com.iocm.business.model.MenuAVModel;
 import com.iocm.business.model.OrderAVModel;
 import com.iocm.business.model.OrderItemAVModel;
 import com.iocm.business.ui.activity.OrderHistoryActivity;
+import com.iocm.business.utils.CustomLinearLayoutManager;
 import com.iocm.business.utils.GsonUtils;
 import com.iocm.business.utils.ToastUtils;
 
@@ -210,7 +211,7 @@ public class MyOrderFragment extends BaseFragment {
 
                 confirmButton = (Button) itemView.findViewById(R.id.itemOrderConfirmButton);
 
-                itemOrderRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                itemOrderRecyclerView.setLayoutManager(new CustomLinearLayoutManager(getActivity()));
                 itemOrderRecyclerView.setAdapter(new ItemAdapter());
             }
 
