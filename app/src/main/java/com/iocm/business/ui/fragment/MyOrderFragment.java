@@ -40,6 +40,13 @@ import java.util.List;
  */
 public class MyOrderFragment extends BaseFragment {
 
+    private static final int CLIENT_WATI = 1;
+    private static final int CLIENT_GET_MENU = 2; //客户得到菜
+    private static final int COOK_FINISH_THIS_MENU = 3; //厨师做完一道菜
+
+    private static final int ORDER_BEGIN = 2; // 开始做菜
+    private static final int ORDER_FINISH = 3;// 全部做完
+    private static final int ORDER_CLIENT_GET_ALL = 4; // 客户得到所有的菜
 
     private SwipeRefreshLayout refreshLayout;
 
@@ -72,7 +79,7 @@ public class MyOrderFragment extends BaseFragment {
     private void getData() {
 
         AVQuery<AVObject> query = new AVQuery<>("OrderTable");
-        query.whereNotEqualTo("orderStatus", 3);
+        query.whereNotEqualTo("orderStatus", ORDER_CLIENT_GET_ALL);
         query.orderByDescending("createdAt");
 
         query.findInBackground(new FindCallback<AVObject>() {
@@ -131,11 +138,15 @@ public class MyOrderFragment extends BaseFragment {
             vh.tableNumTextView.setText(model.getTableNum() + "号桌");
             vh.orderMoneyTextView.setText("总计：" + model.getOrderMoney() + "元");
             vh.setItemViewData(new ItemData<Integer, List<OrderItemAVModel>>(position, model.getMenuList()));
-            if (model.getOrderStatus() == 2) {
+
+            if (model.getOrderStatus() == ORDER_BEGIN) {
                 vh.confirmButton.setText("已经通知顾客开始做菜了");
                 vh.confirmButton.setEnabled(false);
-            } else if (model.getOrderStatus() == 3) {
-                vh.confirmButton.setText("顾客以收到所有菜");
+            } else if (model.getOrderStatus() == ORDER_FINISH) {
+                vh.tableNumTextView.setText(model.getTableNum() + "号桌的菜 已经做完了。");
+                vh.confirmButton.setEnabled(false);
+            } else if (model.getOrderStatus() == ORDER_CLIENT_GET_ALL) {
+                vh.confirmButton.setText("顾客确认收到所有菜");
                 vh.confirmButton.setEnabled(false);
             } else {
                 vh.confirmButton.setText("开始做菜");
@@ -150,7 +161,7 @@ public class MyOrderFragment extends BaseFragment {
                         @Override
                         public void done(List<AVObject> list, AVException e) {
                             AVObject object = list.get(0);
-                            object.put("orderStatus", 2);//开始做菜
+                            object.put("orderStatus", ORDER_BEGIN);//开始做菜
                             object.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(AVException e) {
@@ -219,6 +230,14 @@ public class MyOrderFragment extends BaseFragment {
                     vh.name.setText(model.getModel().getName());
                     int status = model.getModel().getMenuStatus();
                     vh.confirmButton.setTag(itemViewData.getKey());
+
+                    if (status == CLIENT_GET_MENU || status == COOK_FINISH_THIS_MENU) {
+                        vh.confirmButton.setVisibility(View.GONE);
+                    } else {
+                        vh.confirmButton.setVisibility(View.VISIBLE);
+                    }
+
+
                     vh.confirmButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -226,24 +245,36 @@ public class MyOrderFragment extends BaseFragment {
                             final List<OrderItemAVModel> list1 = itemViewData.getValue();
                             OrderItemAVModel orderItemAVModel = list1.get(position);
                             MenuAVModel menuAVModel = orderItemAVModel.getModel();
-                            menuAVModel.setMenuStatus(3);
+                            menuAVModel.setMenuStatus(COOK_FINISH_THIS_MENU); //做好了
                             list1.remove(position);
                             orderItemAVModel.setModel(menuAVModel);
                             list1.add(orderItemAVModel);
 //                            setItemViewData(new ItemData<Integer, List<OrderItemAVModel>>(itemViewData.getKey(), list));
 
+                            boolean getALL = true;
+                            for (OrderItemAVModel avModel : list1) {
+                                if (avModel.getModel().getMenuStatus() == CLIENT_WATI) {
+                                    getALL = false;
+                                    break;
+                                }
+                            }
 
                             int p = (int) vh.confirmButton.getTag();
                             String obId = viewData.get(p).getId();
                             AVQuery<AVObject> query = new AVQuery<AVObject>("OrderTable");
                             query.whereEqualTo("objectId", obId);
+                            final boolean finalGetALL = getALL;
                             query.findInBackground(new FindCallback<AVObject>() {
                                 @Override
                                 public void done(List<AVObject> list, AVException e) {
                                     if (e == null && list.size() > 0) {
                                         AVObject getOb = list.get(0);
                                         getOb.put("menuList", GsonUtils.getInstance().getGson().toJson(list1));
-                                        getOb.put("orderStatus", 2);
+                                        if (finalGetALL) {
+                                            getOb.put("orderStatus", ORDER_FINISH);
+                                        } else {
+                                            getOb.put("orderStatus", ORDER_BEGIN);
+                                        }
                                         getOb.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(AVException e) {
@@ -260,11 +291,7 @@ public class MyOrderFragment extends BaseFragment {
                         }
                     });
 
-                    if (status == 3) {
-                        vh.confirmButton.setVisibility(View.GONE);
-                    } else {
-                        vh.confirmButton.setVisibility(View.VISIBLE);
-                    }
+
                 }
 
                 @Override
