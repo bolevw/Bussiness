@@ -1,11 +1,15 @@
 package com.iocm.business.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,6 +27,7 @@ import com.iocm.business.model.ItemData;
 import com.iocm.business.model.MenuAVModel;
 import com.iocm.business.model.OrderAVModel;
 import com.iocm.business.model.OrderItemAVModel;
+import com.iocm.business.ui.activity.OrderHistoryActivity;
 import com.iocm.business.utils.GsonUtils;
 import com.iocm.business.utils.ToastUtils;
 
@@ -46,6 +51,7 @@ public class MyOrderFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_my_order, container, false);
+        setHasOptionsMenu(true);
         return v;
     }
 
@@ -72,22 +78,25 @@ public class MyOrderFragment extends BaseFragment {
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
-                viewData.clear();
                 refreshLayout.setRefreshing(false);
-                for (AVObject object : list) {
-                    OrderAVModel model = new OrderAVModel();
-                    model.setId(object.getObjectId());
-                    model.setTableNum(object.getString("tableNum"));
-                    model.setUserId(object.getString("userId"));
-                    model.setUsername(object.getString("username"));
-                    model.setOrderStatus(object.getNumber("orderStatus").intValue());
-                    Type listType = new TypeToken<List<OrderItemAVModel>>() {
-                    }.getType();
-                    List<OrderItemAVModel> listData = GsonUtils.getInstance().getGson().fromJson(object.getString("menuList"), listType);
-                    model.setMenuList(listData);
-                    viewData.add(model);
+                if (e == null && list.size() > 0) {
+                    viewData.clear();
+                    for (AVObject object : list) {
+                        OrderAVModel model = new OrderAVModel();
+                        model.setId(object.getObjectId());
+                        model.setTableNum(object.getString("tableNum"));
+                        model.setUserId(object.getString("userId"));
+                        model.setUsername(object.getString("username"));
+                        model.setOrderStatus(object.getNumber("orderStatus").intValue());
+                        model.setOrderMoney(object.getString("orderMoney"));
+                        Type listType = new TypeToken<List<OrderItemAVModel>>() {
+                        }.getType();
+                        List<OrderItemAVModel> listData = GsonUtils.getInstance().getGson().fromJson(object.getString("menuList"), listType);
+                        model.setMenuList(listData);
+                        viewData.add(model);
+                    }
+                    orderRecyclerView.getAdapter().notifyDataSetChanged();
                 }
-                orderRecyclerView.getAdapter().notifyDataSetChanged();
             }
         });
     }
@@ -120,6 +129,7 @@ public class MyOrderFragment extends BaseFragment {
             final OrderVH vh = (OrderVH) holder;
             final OrderAVModel model = viewData.get(position);
             vh.tableNumTextView.setText(model.getTableNum() + "号桌");
+            vh.orderMoneyTextView.setText("总计：" + model.getOrderMoney() + "元");
             vh.setItemViewData(new ItemData<Integer, List<OrderItemAVModel>>(position, model.getMenuList()));
             if (model.getOrderStatus() == 2) {
                 vh.confirmButton.setText("已经通知顾客开始做菜了");
@@ -166,6 +176,7 @@ public class MyOrderFragment extends BaseFragment {
             private RecyclerView itemOrderRecyclerView;
             private TextView tableNumTextView;
             private Button confirmButton;
+            private TextView orderMoneyTextView;
 
             private ItemData<Integer, List<OrderItemAVModel>> itemViewData = new ItemData<>();
 
@@ -182,6 +193,7 @@ public class MyOrderFragment extends BaseFragment {
             public OrderVH(View itemView) {
                 super(itemView);
 
+                orderMoneyTextView = (TextView) itemView.findViewById(R.id.orderMoneyTextView);
                 tableNumTextView = (TextView) itemView.findViewById(R.id.tableNumTextView);
                 itemOrderRecyclerView = (RecyclerView) itemView.findViewById(R.id.itemOrderRecyclerView);
 
@@ -231,6 +243,7 @@ public class MyOrderFragment extends BaseFragment {
                                     if (e == null && list.size() > 0) {
                                         AVObject getOb = list.get(0);
                                         getOb.put("menuList", GsonUtils.getInstance().getGson().toJson(list1));
+                                        getOb.put("orderStatus", 2);
                                         getOb.saveInBackground(new SaveCallback() {
                                             @Override
                                             public void done(AVException e) {
@@ -272,5 +285,20 @@ public class MyOrderFragment extends BaseFragment {
                 }
             }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_order_history, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_order_history) {
+            startActivity(new Intent(getActivity(), OrderHistoryActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

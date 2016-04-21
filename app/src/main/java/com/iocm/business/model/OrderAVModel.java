@@ -6,14 +6,27 @@ import java.util.List;
  * Created by Administrator on 2016/4/19.
  */
 
-public class OrderAVModel{
+public class OrderAVModel {
     private String id;
     private String userId;
     private String tableNum;
     private List<OrderItemAVModel> menuList;
     private String username;
     private Integer orderStatus;
+    private String orderMoney;
 
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getOrderMoney() {
+        return orderMoney;
+    }
+
+    public void setOrderMoney(String orderMoney) {
+        this.orderMoney = orderMoney;
+    }
 
     public String getId() {
         return id;
