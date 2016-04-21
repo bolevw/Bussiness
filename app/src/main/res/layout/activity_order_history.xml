@@ -6,6 +6,13 @@
 
     <include layout="@layout/global_include_toolbar" />
 
+
+    <TextView
+        android:id="@+id/allMoneyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="zong shouru " />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/orderHistoryRefreshLayout"
         android:layout_width="match_parent"

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/activity_vertical_margin"
+    android:layout_marginRight="@dimen/activity_vertical_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/bg_my_order"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/tableNumTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="zhuohhao "
+            android:textSize="@dimen/text_normal" />
+
+        <TextView
+            android:id="@+id/orderMoneyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="jine"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="@dimen/text_normal" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/holo_blue_bright" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/orderNumTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="zhuohhao "
+            android:textSize="@dimen/text_normal" />
+
+        <TextView
+            android:id="@+id/payStatusTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="jine"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="@dimen/text_normal" />
+    </LinearLayout>
+
+</LinearLayout>
