@@ -3,6 +3,7 @@ package com.iocm.business.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -49,7 +50,6 @@ public class MyMenuFragment extends BaseFragment {
         View v = inflater.inflate(R.layout.fragment_my_menu, container, false);
         setHasOptionsMenu(true);
         return v;
-
     }
 
     @Override
@@ -59,7 +59,6 @@ public class MyMenuFragment extends BaseFragment {
         recyclerView = (RecyclerView) v.findViewById(R.id.myMenuRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         refreshLayout.setColorSchemeColors(R.color.colorAccent, R.color.colorPrimary, R.color.colorPrimaryDark);
-
     }
 
     @Override
@@ -84,9 +83,14 @@ public class MyMenuFragment extends BaseFragment {
                             model.setId(object.getObjectId());
                             model.setName(object.getString("name"));
                             model.setDetail(object.getString("detail"));
-                            String url = object.getAVFile("picSrc").getUrl();
                             model.setMoney(object.getString("money"));
+                            String url = object.getAVFile("picSrc").getUrl();
                             model.setImageSrc(url);
+                            model.setHas(object.getBoolean("has"));
+                            model.setType(object.getString("type"));
+                            model.setTaste(object.getString("taste"));
+                            model.setMethod(object.getString("method"));
+                            model.setFunction(object.getString("function"));
                             viewData.add(model);
                         }
 
@@ -102,9 +106,7 @@ public class MyMenuFragment extends BaseFragment {
     @Override
     protected void setListener() {
         refreshLayout.setOnRefreshListener(onRefreshListener);
-
         recyclerView.setAdapter(new RVAdapter());
-
     }
 
     @Override
@@ -130,12 +132,29 @@ public class MyMenuFragment extends BaseFragment {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            MenuModel model = viewData.get(position);
+            final MenuModel model = viewData.get(position);
             VH vh = (VH) holder;
             vh.itemContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("菜品详情");
+                    builder.setView(R.layout.layout_menu_detail);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                    TextView detail = (TextView) dialog.findViewById(R.id.menuDetailTextView);
+                    TextView name = (TextView) dialog.findViewById(R.id.menuNameTextView);
+                    TextView function = (TextView) dialog.findViewById(R.id.menuFunction);
+                    TextView menuType = (TextView) dialog.findViewById(R.id.menuTypeTextView);
+                    TextView menuMethod = (TextView) dialog.findViewById(R.id.menuMethod);
+                    TextView money = (TextView) dialog.findViewById(R.id.menuMoneyTextView);
 
+                    detail.setText("食材：" + model.getDetail());
+                    name.setText("菜名：" + model.getName());
+                    function.setText("营养价值：" + model.getFunction());
+                    menuType.setText("菜系：" + model.getType());
+                    menuMethod.setText("做法：" + model.getMethod());
+                    money.setText("价格：" + model.getMoney() + "元/份");
                 }
             });
 

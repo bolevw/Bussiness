@@ -1,14 +1,17 @@
 package com.iocm.business.ui.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.avos.avoscloud.AVUser;
 import com.iocm.business.R;
 import com.iocm.business.base.BaseActivity;
 import com.iocm.business.model.NameValue;
@@ -91,9 +94,21 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_slideshow) {
             FragmentUtils.replaceFragment(getSupportFragmentManager(), R.id.fragmentContainer, new MyOrderFragment(), false, "MyOrderFragment");
         } else if (id == R.id.nav_manage) {
-            preferencesUtil.saveValue(new NameValue("login", false));
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("是否退出？");
+            builder.setNegativeButton("取消", null);
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    preferencesUtil.saveValue(new NameValue("login", false));
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    AVUser.getCurrentUser().logOut();
+                    finish();
+                }
+            });
+            builder.create().show();
+
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/common_background_white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/menuNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/text_normal" />
+
+    <TextView
+        android:id="@+id/menuMoneyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/text_normal" />
+
+    <TextView
+        android:id="@+id/menuFunction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/text_normal" />
+
+    <TextView
+        android:id="@+id/menuTypeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/text_normal" />
+
+    <TextView
+        android:id="@+id/menuMethod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/text_normal" />
+
+    <TextView
+        android:id="@+id/menuDetailTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="8dp"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/text_normal" />
+
+</LinearLayout>
