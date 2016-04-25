@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="我的菜单" />
+            android:icon="@mipmap/ic_menu"
+            android:title="我的菜单"
+            app:showAsAction="always" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="编辑菜单" />
+            android:icon="@mipmap/ic_edit"
+            android:title="编辑菜单"
+            app:showAsAction="always" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="我的订单" />
+            android:icon="@mipmap/ic_order"
+            android:title="我的订单"
+            app:showAsAction="always" />
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="退出登录" />
+            android:icon="@mipmap/ic_logout"
+            android:title="退出登录"
+            app:showAsAction="always" />
     </group>
 
 </menu>

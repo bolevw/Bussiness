@@ -20,11 +20,15 @@ public abstract class BaseFragment extends Fragment {
 
         initView(view);
         setListener();
-        bind();
+
     }
 
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        bind();
+    }
 
     protected abstract void initView(View v);
 

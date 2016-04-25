@@ -1,6 +1,8 @@
 package com.iocm.business.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -213,6 +215,19 @@ public class MyOrderFragment extends BaseFragment {
 
                 itemOrderRecyclerView.setLayoutManager(new CustomLinearLayoutManager(getActivity()));
                 itemOrderRecyclerView.setAdapter(new ItemAdapter());
+
+                itemOrderRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                    @Override
+                    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                        super.getItemOffsets(outRect, view, parent, state);
+                        outRect.bottom = getActivity().getResources().getDimensionPixelSize(R.dimen.cut_line);
+                    }
+
+                    @Override
+                    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                        super.onDraw(c, parent, state);
+                    }
+                });
             }
 
 
@@ -281,7 +296,7 @@ public class MyOrderFragment extends BaseFragment {
                                             public void done(AVException e) {
                                                 if (e == null) {
                                                     vh.confirmButton.setVisibility(View.GONE);
-                                                    ToastUtils.showNormalToast("修改成功");
+                                                    ToastUtils.showNormalToast("已成功通知顾客上菜");
                                                     getData();
                                                 }
                                             }

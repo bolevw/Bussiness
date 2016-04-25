@@ -9,8 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="@color/white"
-        android:text="zhuo hao :" />
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/activity_vertical_margin"
+        android:textSize="@dimen/text_normal" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/cut_line" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/itemOrderRecyclerView"
@@ -18,7 +24,8 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/itemOrderConfirmButton"
         android:layout_below="@+id/tableNumTextView"
-        android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+        android:layout_weight="1"
+        android:background="@color/common_background_white"></android.support.v7.widget.RecyclerView>
 
     <TextView
         android:id="@+id/orderMoneyTextView"
@@ -36,5 +43,10 @@
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
         android:text="确认收到所有菜" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/holo_red_light" />
 
 </LinearLayout>

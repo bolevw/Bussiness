@@ -87,7 +87,7 @@ public class OrderHistoryActivity extends BaseActivity {
                         }
                         viewData.add(model);
                     }
-                    allMoneyTextView.setText(allMoney + "");
+                    allMoneyTextView.setText("已成功收钱:" + allMoney + "元");
                     recyclerView.getAdapter().notifyDataSetChanged();
                 } else {
                     Log.e("error", e.getMessage() + e.getCode());
@@ -108,10 +108,10 @@ public class OrderHistoryActivity extends BaseActivity {
             OrderHistoryModel model = viewData.get(position);
             VH vh = (VH) holder;
 
-            vh.tableNumTextView.setText(model.getTablenum());
-            vh.orderNumTextView.setText(model.getOrderNum());
+            vh.tableNumTextView.setText("桌号：" + model.getTablenum());
+            vh.orderNumTextView.setText("订单号：" + model.getOrderNum());
             vh.moneyTextView.setText("价格:" + model.getMoney() + "元");
-            vh.payStatusTextView.setText(model.getOrderStatus() == 6 ? "已支付" : "待支付");
+            vh.payStatusTextView.setText(model.getOrderStatus() == 6 ? "状态：已支付" : "状态：待支付");
         }
 
         @Override

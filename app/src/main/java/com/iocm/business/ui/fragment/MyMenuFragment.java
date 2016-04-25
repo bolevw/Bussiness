@@ -64,7 +64,6 @@ public class MyMenuFragment extends BaseFragment {
     @Override
     protected void bind() {
         getData();
-
     }
 
     private void getData() {
